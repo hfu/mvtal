@@ -64,7 +64,8 @@ export function formatTypes(types) {
  */
 export function formatSampleValuesForDisplay(values, limit, showAll) {
   const displayValues = showAll ? values : values.slice(0, limit);
-  return displayValues.map(v => `${v.value} (${v.count})`).join(', ');
+  // Return array of formatted strings, let caller handle joining and escaping
+  return displayValues.map(v => `${v.value} (${v.count})`);
 }
 
 /**
