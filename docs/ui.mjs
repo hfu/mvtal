@@ -42,14 +42,17 @@ export function hideStatus(statusDiv) {
 
 /**
  * Format type for display as HTML badge
+ * Types are internal values (null, boolean, number, string, unknown) so they are safe
  * @param {string[]} types - Array of type names
  * @returns {string} HTML formatted types
  */
 export function formatTypes(types) {
-  if (types.length === 1) {
-    return `<span class="type-badge type-${types[0]}">${types[0]}</span>`;
+  // Types are internal constants from VALUE_TYPES, not user input, so safe to use directly
+  const safeTypes = types.map(t => escapeHtml(String(t)));
+  if (safeTypes.length === 1) {
+    return `<span class="type-badge type-${safeTypes[0]}">${safeTypes[0]}</span>`;
   }
-  return `<span class="type-badge type-mixed">${types.join(', ')}</span>`;
+  return `<span class="type-badge type-mixed">${safeTypes.join(', ')}</span>`;
 }
 
 /**
@@ -65,14 +68,25 @@ export function formatSampleValuesForDisplay(values, limit, showAll) {
 }
 
 /**
+ * HTML entity map for escaping
+ */
+const HTML_ENTITIES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+};
+
+/**
  * Escape HTML to prevent XSS
+ * Uses string replacement for better performance
  * @param {string} str - String to escape
  * @returns {string} Escaped string
  */
 export function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  if (str == null) return '';
+  return String(str).replace(/[&<>"']/g, char => HTML_ENTITIES[char]);
 }
 
 /**

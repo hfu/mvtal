@@ -18,6 +18,20 @@ export function formatSampleValues(values, limit, showAll) {
 }
 
 /**
+ * Escape a value for CSV
+ * Handles quotes, newlines, and commas
+ * @param {string} value - Value to escape
+ * @returns {string} Escaped value with surrounding quotes
+ */
+function escapeCsvValue(value) {
+  if (value == null) return '""';
+  const str = String(value);
+  // Replace double quotes with two double quotes, then wrap in quotes
+  const escaped = str.replace(/"/g, '""');
+  return `"${escaped}"`;
+}
+
+/**
  * Generate CSV content for a layer
  * @param {string} layerName - Layer name
  * @param {Object} layerInfo - Layer analysis data
@@ -27,14 +41,16 @@ export function generateCSV(layerName, layerInfo) {
   const lines = ['key,types,count,sample_values'];
   
   for (const attr of layerInfo.attributes) {
-    const types = attr.types.join(';');
-    const sampleValues = attr.values
-      .slice(0, CONFIG.MAX_SAMPLE_VALUES_CSV)
-      .map(v => v.value)
-      .join(';')
-      .replace(/"/g, '""');
+    const key = escapeCsvValue(attr.key);
+    const types = escapeCsvValue(attr.types.join(';'));
+    const sampleValues = escapeCsvValue(
+      attr.values
+        .slice(0, CONFIG.MAX_SAMPLE_VALUES_CSV)
+        .map(v => String(v.value))
+        .join(';')
+    );
     
-    lines.push(`"${attr.key}","${types}",${attr.count},"${sampleValues}"`);
+    lines.push(`${key},${types},${attr.count},${sampleValues}`);
   }
   
   return lines.join('\n');

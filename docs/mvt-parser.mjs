@@ -3,8 +3,8 @@
  * Handles fetching and parsing of Mapbox Vector Tiles
  */
 
-import Pbf from 'https://esm.sh/pbf@4';
-import { VectorTile } from 'https://esm.sh/@mapbox/vector-tile@2';
+import Pbf from 'https://esm.sh/pbf@4.0.1';
+import { VectorTile } from 'https://esm.sh/@mapbox/vector-tile@2.0.3';
 import { VALUE_TYPES } from './config.mjs';
 
 /**
