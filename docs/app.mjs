@@ -6,6 +6,7 @@
 import { fetchAndAnalyzeTile } from './mvt-parser.mjs';
 import { downloadCSV, downloadMarkdown } from './exporter.mjs';
 import { getElements, showStatus, hideStatus, renderResults } from './ui.mjs';
+import { CONFIG, STATUS_TYPES, MESSAGES } from './config.mjs';
 
 // DOM Elements
 const elements = getElements();
@@ -18,7 +19,7 @@ let currentData = null;
  * @returns {number} Sample limit value
  */
 function getSampleLimit() {
-  return parseInt(elements.sampleCountInput.value) || 5;
+  return parseInt(elements.sampleCountInput.value) || CONFIG.DEFAULT_SAMPLE_LIMIT;
 }
 
 /**
@@ -36,12 +37,12 @@ async function handleFetch() {
   const url = elements.urlInput.value.trim();
   
   if (!url) {
-    showStatus(elements.statusDiv, 'URLを入力してください。', 'error');
+    showStatus(elements.statusDiv, MESSAGES.ENTER_URL, STATUS_TYPES.ERROR);
     return;
   }
   
   try {
-    showStatus(elements.statusDiv, 'タイルを取得・解析中...', 'loading');
+    showStatus(elements.statusDiv, MESSAGES.FETCHING, STATUS_TYPES.LOADING);
     elements.fetchBtn.disabled = true;
     
     currentData = await fetchAndAnalyzeTile(url);
@@ -55,12 +56,12 @@ async function handleFetch() {
       downloadMarkdown
     );
     
-    showStatus(elements.statusDiv, '解析完了!', 'success');
-    setTimeout(() => hideStatus(elements.statusDiv), 2000);
+    showStatus(elements.statusDiv, MESSAGES.COMPLETE, STATUS_TYPES.SUCCESS);
+    setTimeout(() => hideStatus(elements.statusDiv), CONFIG.STATUS_SUCCESS_TIMEOUT);
     
   } catch (error) {
     console.error('Error:', error);
-    showStatus(elements.statusDiv, `エラー: ${error.message}`, 'error');
+    showStatus(elements.statusDiv, `${MESSAGES.ERROR_PREFIX}${error.message}`, STATUS_TYPES.ERROR);
   } finally {
     elements.fetchBtn.disabled = false;
   }

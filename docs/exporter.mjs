@@ -3,6 +3,8 @@
  * Handles CSV and Markdown generation and file download
  */
 
+import { CONFIG, MIME_TYPES } from './config.mjs';
+
 /**
  * Format sample values for display/export
  * @param {Array} values - Array of {value, count} objects
@@ -27,7 +29,7 @@ export function generateCSV(layerName, layerInfo) {
   for (const attr of layerInfo.attributes) {
     const types = attr.types.join(';');
     const sampleValues = attr.values
-      .slice(0, 10)
+      .slice(0, CONFIG.MAX_SAMPLE_VALUES_CSV)
       .map(v => v.value)
       .join(';')
       .replace(/"/g, '""');
@@ -89,7 +91,7 @@ export function downloadFile(filename, content, mimeType) {
  */
 export function downloadCSV(layerName, layerInfo) {
   const csv = generateCSV(layerName, layerInfo);
-  downloadFile(`${layerName}_attributes.csv`, csv, 'text/csv;charset=utf-8');
+  downloadFile(`${layerName}_attributes.csv`, csv, MIME_TYPES.CSV);
 }
 
 /**
@@ -101,5 +103,5 @@ export function downloadCSV(layerName, layerInfo) {
  */
 export function downloadMarkdown(layerName, layerInfo, sampleLimit, showAll) {
   const md = generateMarkdown(layerName, layerInfo, sampleLimit, showAll);
-  downloadFile(`${layerName}_attributes.md`, md, 'text/markdown;charset=utf-8');
+  downloadFile(`${layerName}_attributes.md`, md, MIME_TYPES.MARKDOWN);
 }

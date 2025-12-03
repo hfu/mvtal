@@ -3,6 +3,8 @@
  * Handles DOM manipulation and rendering
  */
 
+import { CSS_CLASSES, TABLE_HEADERS, MESSAGES } from './config.mjs';
+
 /**
  * Create DOM elements for the application
  * @returns {Object} Object containing DOM element references
@@ -85,21 +87,21 @@ export function escapeHtml(str) {
  */
 export function createLayerSection(layerName, layerInfo, sampleLimit, showAll, onDownloadCSV, onDownloadMD) {
   const section = document.createElement('div');
-  section.className = 'layer-section';
+  section.className = CSS_CLASSES.LAYER_SECTION;
   
   const header = document.createElement('div');
-  header.className = 'layer-header';
+  header.className = CSS_CLASSES.LAYER_HEADER;
   header.innerHTML = `
-    <span class="layer-name">📦 ${escapeHtml(layerName)}</span>
-    <span class="layer-info">${layerInfo.featureCount} features, ${layerInfo.attributes.length} attributes</span>
+    <span class="${CSS_CLASSES.LAYER_NAME}">📦 ${escapeHtml(layerName)}</span>
+    <span class="${CSS_CLASSES.LAYER_INFO}">${layerInfo.featureCount} features, ${layerInfo.attributes.length} attributes</span>
   `;
   
   const content = document.createElement('div');
-  content.className = 'layer-content';
+  content.className = CSS_CLASSES.LAYER_CONTENT;
   
   // Export buttons
   const exportDiv = document.createElement('div');
-  exportDiv.className = 'export-buttons';
+  exportDiv.className = CSS_CLASSES.EXPORT_BUTTONS;
   
   const csvBtn = document.createElement('button');
   csvBtn.textContent = '📥 CSV';
@@ -120,13 +122,13 @@ export function createLayerSection(layerName, layerInfo, sampleLimit, showAll, o
   } else {
     const emptyMsg = document.createElement('p');
     emptyMsg.style.color = '#666';
-    emptyMsg.textContent = '属性がありません。';
+    emptyMsg.textContent = MESSAGES.NO_ATTRIBUTES;
     content.appendChild(emptyMsg);
   }
   
   // Toggle expand/collapse
   header.onclick = () => {
-    content.classList.toggle('expanded');
+    content.classList.toggle(CSS_CLASSES.LAYER_CONTENT_EXPANDED);
   };
   
   section.appendChild(header);
@@ -147,10 +149,10 @@ export function createAttributeTable(attributes, sampleLimit, showAll) {
   table.innerHTML = `
     <thead>
       <tr>
-        <th>属性キー</th>
-        <th>型</th>
-        <th>出現回数</th>
-        <th>サンプル値</th>
+        <th>${TABLE_HEADERS.KEY}</th>
+        <th>${TABLE_HEADERS.TYPE}</th>
+        <th>${TABLE_HEADERS.COUNT}</th>
+        <th>${TABLE_HEADERS.SAMPLES}</th>
       </tr>
     </thead>
     <tbody>
@@ -159,7 +161,7 @@ export function createAttributeTable(attributes, sampleLimit, showAll) {
           <td><strong>${escapeHtml(attr.key)}</strong></td>
           <td>${formatTypes(attr.types)}</td>
           <td>${attr.count}</td>
-          <td class="sample-values">${escapeHtml(formatSampleValuesForDisplay(attr.values, sampleLimit, showAll))}</td>
+          <td class="${CSS_CLASSES.SAMPLE_VALUES}">${escapeHtml(formatSampleValuesForDisplay(attr.values, sampleLimit, showAll))}</td>
         </tr>
       `).join('')}
     </tbody>
@@ -180,7 +182,7 @@ export function renderResults(resultsDiv, layersData, sampleLimit, showAll, down
   resultsDiv.innerHTML = '';
   
   if (Object.keys(layersData).length === 0) {
-    resultsDiv.innerHTML = '<p style="padding: 20px; color: #666;">レイヤーが見つかりませんでした。</p>';
+    resultsDiv.innerHTML = `<p style="padding: 20px; color: #666;">${MESSAGES.NO_LAYERS}</p>`;
     return;
   }
   
@@ -199,7 +201,7 @@ export function renderResults(resultsDiv, layersData, sampleLimit, showAll, down
     
     // Auto-expand first layer
     if (isFirst) {
-      section.querySelector('.layer-content').classList.add('expanded');
+      section.querySelector(`.${CSS_CLASSES.LAYER_CONTENT}`).classList.add(CSS_CLASSES.LAYER_CONTENT_EXPANDED);
       isFirst = false;
     }
   }

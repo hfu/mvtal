@@ -5,6 +5,7 @@
 
 import Pbf from 'https://esm.sh/pbf@4';
 import { VectorTile } from 'https://esm.sh/@mapbox/vector-tile@2';
+import { VALUE_TYPES } from './config.mjs';
 
 /**
  * Fetch MVT tile from URL
@@ -36,11 +37,11 @@ export function parseTile(data) {
  * @returns {string} The type name
  */
 export function getValueType(value) {
-  if (value === null || value === undefined) return 'null';
-  if (typeof value === 'boolean') return 'boolean';
-  if (typeof value === 'number') return 'number';
-  if (typeof value === 'string') return 'string';
-  return 'unknown';
+  if (value === null || value === undefined) return VALUE_TYPES.NULL;
+  if (typeof value === 'boolean') return VALUE_TYPES.BOOLEAN;
+  if (typeof value === 'number') return VALUE_TYPES.NUMBER;
+  if (typeof value === 'string') return VALUE_TYPES.STRING;
+  return VALUE_TYPES.UNKNOWN;
 }
 
 /**
