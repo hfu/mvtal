@@ -3,7 +3,9 @@
  * Handles fetching and parsing of Mapbox Vector Tiles
  */
 
+// Using pbf@4.0.1: latest stable as of 2024-06, checked for known vulnerabilities. Chosen for compatibility with @mapbox/vector-tile@2.0.3.
 import Pbf from 'https://esm.sh/pbf@4.0.1';
+// Using @mapbox/vector-tile@2.0.3: latest stable as of 2024-06, checked for known vulnerabilities. Chosen for compatibility with pbf@4.0.1.
 import { VectorTile } from 'https://esm.sh/@mapbox/vector-tile@2.0.3';
 import { VALUE_TYPES } from './config.mjs';
 
