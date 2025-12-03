@@ -10,12 +10,32 @@ import { VectorTile } from 'https://esm.sh/@mapbox/vector-tile@2.0.3';
 import { VALUE_TYPES } from './config.mjs';
 
 /**
+ * Validate URL format
+ * @param {string} url - The URL to validate
+ * @throws {Error} If the URL is invalid
+ */
+function validateUrl(url) {
+  try {
+    const parsedUrl = new URL(url);
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+      throw new Error('URL must use http or https protocol');
+    }
+  } catch (e) {
+    if (e.message.includes('protocol')) {
+      throw e;
+    }
+    throw new Error('Invalid URL format');
+  }
+}
+
+/**
  * Fetch MVT tile from URL
  * @param {string} url - The tile URL to fetch
  * @returns {Promise<ArrayBuffer>} The tile data as ArrayBuffer
  * @throws {Error} If the fetch fails or response is not OK
  */
 export async function fetchTile(url) {
+  validateUrl(url);
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`HTTP error: ${response.status} ${response.statusText}`);

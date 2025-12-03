@@ -57,6 +57,16 @@ export function generateCSV(layerName, layerInfo) {
 }
 
 /**
+ * Escape special Markdown characters for table cells
+ * @param {string} value - Value to escape
+ * @returns {string} Escaped value
+ */
+function escapeMarkdown(value) {
+  if (value == null) return '';
+  return String(value).replace(/\|/g, '\\|').replace(/\n/g, ' ');
+}
+
+/**
  * Generate Markdown content for a layer
  * @param {string} layerName - Layer name
  * @param {Object} layerInfo - Layer analysis data
@@ -65,7 +75,7 @@ export function generateCSV(layerName, layerInfo) {
  * @returns {string} Markdown content
  */
 export function generateMarkdown(layerName, layerInfo, sampleLimit, showAll) {
-  let md = `# Layer: ${layerName}\n\n`;
+  let md = `# Layer: ${escapeMarkdown(layerName)}\n\n`;
   md += `- **Features**: ${layerInfo.featureCount}\n`;
   md += `- **Version**: ${layerInfo.version}\n`;
   md += `- **Extent**: ${layerInfo.extent}\n\n`;
@@ -74,9 +84,10 @@ export function generateMarkdown(layerName, layerInfo, sampleLimit, showAll) {
   md += `|-----|-------|-------|---------------|\n`;
   
   for (const attr of layerInfo.attributes) {
-    const types = attr.types.join(', ');
-    const samples = formatSampleValues(attr.values, sampleLimit, showAll);
-    md += `| ${attr.key} | ${types} | ${attr.count} | ${samples} |\n`;
+    const key = escapeMarkdown(attr.key);
+    const types = escapeMarkdown(attr.types.join(', '));
+    const samples = escapeMarkdown(formatSampleValues(attr.values, sampleLimit, showAll));
+    md += `| ${key} | ${types} | ${attr.count} | ${samples} |\n`;
   }
   
   return md;

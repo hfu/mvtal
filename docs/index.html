@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -120,9 +120,17 @@
       justify-content: space-between;
       align-items: center;
       user-select: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
     }
     .layer-header:hover {
       background: #e9ecef;
+    }
+    .layer-header:focus {
+      outline: 2px solid #4a90d9;
+      outline-offset: -2px;
     }
     .layer-name {
       font-weight: bold;
@@ -213,16 +221,16 @@
   
   <div class="input-section">
     <div class="input-group">
-      <input type="text" id="urlInput" placeholder="Tile URL (e.g. https://tunnel.optgeo.org/martin/mapterhorn/12/2084/1972)" />
-      <button id="fetchBtn">解析</button>
+      <input type="text" id="urlInput" placeholder="Tile URL (e.g. https://tunnel.optgeo.org/martin/mapterhorn/12/2084/1972)" aria-label="MVT Tile URL" />
+      <button id="fetchBtn" aria-label="Analyze tile">解析</button>
     </div>
     <div class="options">
       <label>
         <span>サンプル値表示数:</span>
-        <input type="number" id="sampleCount" value="5" min="1" max="100" />
+        <input type="number" id="sampleCount" value="5" min="1" max="100" aria-label="Number of sample values to display" />
       </label>
       <label>
-        <input type="checkbox" id="showAllValues" />
+        <input type="checkbox" id="showAllValues" aria-label="Show all values" />
         <span>すべての値を表示</span>
       </label>
     </div>

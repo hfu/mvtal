@@ -104,8 +104,10 @@ export function createLayerSection(layerName, layerInfo, sampleLimit, showAll, o
   const section = document.createElement('div');
   section.className = CSS_CLASSES.LAYER_SECTION;
   
-  const header = document.createElement('div');
+  const header = document.createElement('button');
   header.className = CSS_CLASSES.LAYER_HEADER;
+  header.setAttribute('aria-expanded', 'false');
+  header.setAttribute('aria-label', `Toggle ${layerName} layer details`);
   header.innerHTML = `
     <span class="${CSS_CLASSES.LAYER_NAME}">📦 ${escapeHtml(layerName)}</span>
     <span class="${CSS_CLASSES.LAYER_INFO}">${layerInfo.featureCount} features, ${layerInfo.attributes.length} attributes</span>
@@ -120,10 +122,12 @@ export function createLayerSection(layerName, layerInfo, sampleLimit, showAll, o
   
   const csvBtn = document.createElement('button');
   csvBtn.textContent = '📥 CSV';
+  csvBtn.setAttribute('aria-label', `Download ${layerName} attributes as CSV`);
   csvBtn.onclick = onDownloadCSV;
   
   const mdBtn = document.createElement('button');
   mdBtn.textContent = '📥 Markdown';
+  mdBtn.setAttribute('aria-label', `Download ${layerName} attributes as Markdown`);
   mdBtn.onclick = onDownloadMD;
   
   exportDiv.appendChild(csvBtn);
@@ -141,9 +145,10 @@ export function createLayerSection(layerName, layerInfo, sampleLimit, showAll, o
     content.appendChild(emptyMsg);
   }
   
-  // Toggle expand/collapse
+  // Toggle expand/collapse with keyboard accessibility
   header.onclick = () => {
-    content.classList.toggle(CSS_CLASSES.LAYER_CONTENT_EXPANDED);
+    const isExpanded = content.classList.toggle(CSS_CLASSES.LAYER_CONTENT_EXPANDED);
+    header.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
   };
   
   section.appendChild(header);
